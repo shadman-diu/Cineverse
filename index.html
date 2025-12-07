@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover top-rated movies and series with our modern recommendation platform">
+    <title>CineVerse - Movie & Series Recommendations</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- User Menu & Auth Buttons -->
+    <div class="user-section">
+        <!-- Guest Buttons (shown when not logged in) -->
+        <div class="guest-buttons" id="guestButtons">
+            <button class="auth-btn login-btn" id="showLoginBtn">
+                <i class="fas fa-sign-in-alt"></i>
+                Login
+            </button>
+            <button class="auth-btn signup-btn" id="showSignupBtn">
+                <i class="fas fa-user-plus"></i>
+                Sign Up
+            </button>
+        </div>
+
+        <!-- User Menu (shown when logged in) -->
+        <div class="user-menu" id="userMenu" style="display: none;">
+            <button class="user-menu-btn" id="userMenuBtn">
+                <i class="fas fa-user-circle"></i>
+                <span id="userName">User</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="user-dropdown" id="userDropdown">
+                <a href="#" class="dropdown-item">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+                <a href="#" class="dropdown-item">
+                    <i class="fas fa-heart"></i>
+                    Watchlist
+                </a>
+                <a href="#" class="dropdown-item">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Sticky Navbar -->
+    <nav class="sticky-navbar" id="stickyNavbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <span class="gradient-text">CineVerse</span>
+            </div>
+            <div class="navbar-links">
+                <a href="#" class="nav-link" data-lang-key="home">Home</a>
+                <a href="#" class="nav-link" data-lang-key="movies">Movies</a>
+                <a href="#" class="nav-link" data-lang-key="series">Series</a>
+                <a href="#" class="nav-link" data-lang-key="trending">Trending</a>
+            </div>
+            <div class="navbar-actions">
+                <!-- Language Switcher -->
+                <button class="lang-toggle" id="langToggle" title="Switch Language">
+                    <i class="fas fa-language"></i>
+                    <span id="currentLang">EN</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="gradient-text">CineVerse</span>
+            </h1>
+            <p class="hero-subtitle">Discover Your Next Favorite Movie or Series</p>
+
+            <!-- Search Bar -->
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search movies, series, genres..."
+                    autocomplete="off">
+            </div>
+        </div>
+
+        <!-- Animated Background Elements -->
+        <div class="hero-bg">
+            <div class="floating-shape shape-1"></div>
+            <div class="floating-shape shape-2"></div>
+            <div class="floating-shape shape-3"></div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Category Tabs -->
+        <section class="category-section">
+            <div class="category-tabs">
+                <button class="tab-btn active" data-category="all">
+                    <i class="fas fa-film"></i>
+                    All
+                </button>
+                <button class="tab-btn" data-category="movie">
+                    <i class="fas fa-video"></i>
+                    Movies
+                </button>
+                <button class="tab-btn" data-category="series">
+                    <i class="fas fa-tv"></i>
+                    Series
+                </button>
+                <button class="tab-btn" data-category="trending">
+                    <i class="fas fa-fire"></i>
+                    Trending
+                </button>
+                <button class="tab-btn" data-category="top-imdb">
+                    <i class="fas fa-star"></i>
+                    Top IMDb
+                </button>
+            </div>
+        </section>
+
+        <!-- Filter & Sort Controls -->
+        <section class="controls-section">
+            <div class="controls-container">
+                <!-- Genre Filter -->
+                <div class="control-group">
+                    <label for="genreFilter">
+                        <i class="fas fa-filter"></i>
+                        Genre
+                    </label>
+                    <select id="genreFilter" class="filter-select">
+                        <option value="all">All Genres</option>
+                    </select>
+                </div>
+
+                <!-- Sort Options -->
+                <div class="control-group">
+                    <label for="sortSelect">
+                        <i class="fas fa-sort"></i>
+                        Sort By
+                    </label>
+                    <select id="sortSelect" class="filter-select">
+                        <option value="imdb-desc">IMDb: High to Low</option>
+                        <option value="imdb-asc">IMDb: Low to High</option>
+                        <option value="trending-desc">Trending Score</option>
+                        <option value="year-desc">Year: Newest First</option>
+                        <option value="year-asc">Year: Oldest First</option>
+                        <option value="alpha-asc">A-Z (Alphabetical)</option>
+                        <option value="alpha-desc">Z-A (Reverse)</option>
+                    </select>
+                </div>
+
+                <!-- Results Count -->
+                <div class="results-count" id="resultsCount">
+                    Showing <span id="countNumber">0</span> results
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Grid -->
+        <section class="content-section">
+            <div class="content-grid" id="contentGrid">
+                <!-- Cards will be dynamically inserted here -->
+            </div>
+
+            <!-- Load More Button -->
+            <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+                <button class="btn-load-more" id="loadMoreBtn">
+                    <i class="fas fa-plus-circle"></i>
+                    <span data-lang-key="loadMore">Load More</span>
+                </button>
+            </div>
+
+            <!-- No Results Message -->
+            <div class="no-results" id="noResults" style="display: none;">
+                <i class="fas fa-search"></i>
+                <h3 data-lang-key="noResults">No Results Found</h3>
+                <p data-lang-key="tryAdjusting">Try adjusting your search or filters</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">
+                    <span class="gradient-text">CineVerse</span>
+                </h3>
+                <p class="footer-description">
+                    Your ultimate destination for discovering amazing movies and series.
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-film"></i> Movies</a></li>
+                    <li><a href="#"><i class="fas fa-tv"></i> Series</a></li>
+                    <li><a href="#"><i class="fas fa-info-circle"></i> About</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 CineVerse. All rights reserved. | Design By SHADMAN </p>
+        </div>
+    </footer>
+
+    <!-- Authentication Modals -->
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeModal('loginModal')">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <i class="fas fa-sign-in-alt modal-icon"></i>
+                <h2>Welcome Back</h2>
+                <p>Login to access your account</p>
+            </div>
+            <form class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">
+                        <i class="fas fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <input type="email" id="loginEmail" class="form-input" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password"
+                            required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="link" onclick="switchModal('loginModal', 'forgotModal')">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </button>
+                <div class="form-footer">
+                    Don't have an account?
+                    <a href="#" class="link" onclick="switchModal('loginModal', 'signupModal')">Sign Up</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeModal('signupModal')">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <i class="fas fa-user-plus modal-icon"></i>
+                <h2>Create Account</h2>
+                <p>Join CineVerse today</p>
+            </div>
+            <form class="auth-form" id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">
+                        <i class="fas fa-user"></i>
+                        Full Name
+                    </label>
+                    <input type="text" id="signupName" class="form-input" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">
+                        <i class="fas fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <input type="email" id="signupEmail" class="form-input" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="signupPassword" class="form-input" placeholder="Create a password"
+                            required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('signupPassword')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <!-- Password Strength Meter -->
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <span class="strength-text" id="strengthText">Password strength</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPassword">
+                        <i class="fas fa-lock"></i>
+                        Confirm Password
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="signupConfirmPassword" class="form-input"
+                            placeholder="Confirm your password" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('signupConfirmPassword')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="agreeTerms" required>
+                    <span>I agree to the Terms & Conditions</span>
+                </label>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-user-plus"></i>
+                    Create Account
+                </button>
+                <div class="form-footer">
+                    Already have an account?
+                    <a href="#" class="link" onclick="switchModal('signupModal', 'loginModal')">Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal-overlay" id="forgotModal">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeModal('forgotModal')">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <i class="fas fa-key modal-icon"></i>
+                <h2>Reset Password</h2>
+                <p>Enter your email to reset your password</p>
+            </div>
+            <form class="auth-form" id="forgotForm">
+                <div class="form-group">
+                    <label for="forgotEmail">
+                        <i class="fas fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <input type="email" id="forgotEmail" class="form-input" placeholder="Enter your registered email"
+                        required>
+                </div>
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <p>We'll send you instructions to reset your password</p>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-paper-plane"></i>
+                    Send Reset Link
+                </button>
+                <div class="form-footer">
+                    Remember your password?
+                    <a href="#" class="link" onclick="switchModal('forgotModal', 'loginModal')">Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+
+</html>
